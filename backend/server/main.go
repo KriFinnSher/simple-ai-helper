@@ -18,6 +18,14 @@ import (
 	"time"
 )
 
+const (
+	workersLimit = 100
+)
+
+var (
+	sem = make(chan struct{}, workersLimit)
+)
+
 func main() {
 	err := config.SetUp()
 	if err != nil {
@@ -36,12 +44,22 @@ func main() {
 
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
+	e.Use(middleware.TimeoutWithConfig(
+		middleware.TimeoutConfig{
+			Timeout: 10 * time.Second,
+		}))
 
 	knowledgeRepo := repository.NewKnowledgeRepo(postgresDB)
 	KnowledgeUseCase := usecase.NewKnowledgeInstance(knowledgeRepo)
 	knowledgeHandler := handlers.NewKnowledgeInstance(KnowledgeUseCase)
 
-	e.GET("/api/answer", knowledgeHandler.Answer)
+	e.GET("/api/answer", func(c echo.Context) error {
+		sem <- struct{}{}
+		defer func() {
+			<-sem
+		}()
+		return knowledgeHandler.Answer(c)
+	})
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
