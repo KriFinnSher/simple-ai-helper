@@ -8,41 +8,14 @@ The task includes designing the high-level architecture, implementing basic quer
 
 ## Architecture Overview
 
-The backend system consists of the following key components:
+On the image bellow you can see flow of the main process:
+- first, user sends message (request) to our app;
+- secondly, we call to external API (which is my API on python) to use nlp model;
+- thirdly, app need to check existance of received intent and fetch it from database;
+- finaly we can send to user our response, which will be answer (message) to the user.
 
-1. **AI Agent (NLP Model)**: 
-   - The AI agent leverages a natural language processing model to analyze and understand customer queries. It is responsible for identifying the intent behind the query and deciding whether it can respond directly or needs escalation.
+![flow drawio](https://github.com/user-attachments/assets/0dc09025-6f1f-4474-a89f-6bd41a924f9e)
 
-2. **Database**: 
-   - A mock or in-memory database stores predefined responses to common queries. The AI agent queries this database to find relevant answers based on the identified intent. In a production system, this would be replaced with a real database (e.g., PostgreSQL, MySQL, or NoSQL solutions).
-
-3. **Queueing System**: 
-   - The system uses a queueing mechanism to handle multiple customer queries concurrently and ensures that the system can scale effectively as the number of incoming queries increases. This component ensures the system handles load efficiently and maintains performance.
-
-4. **Scalability**: 
-   - The system is designed to scale horizontally by adding more instances of the AI agent and database connections to handle increased traffic. Load balancing and proper handling of distributed systems are crucial in maintaining high availability and responsiveness.
-
-## Key Requirements
-
-- **AI/NLP for Query Understanding**: 
-  - The system uses NLP techniques to understand the intent behind the customer query, enabling automated responses or escalating to a human agent when necessary.
-  
-- **Database Integration**: 
-  - The system retrieves responses from a knowledge base (mock database) to provide relevant answers to customer queries.
-
-- **Real-Time Processing**: 
-  - The system handles customer queries in real-time and ensures timely responses.
-
-- **Scalability**: 
-  - The solution should efficiently handle concurrent queries to support a large volume of requests.
-
-## Task Deliverables
-
-1. **Architecture Diagram**: 
-   - A high-level architecture diagram has already been created, depicting the flow of data and key components of the system.
-
-2. **Code Implementation**: 
-   - A code snippet simulating the query processing system, NLP-based intent recognition, and querying a mock database.
 
 ## Code Implementation
 
